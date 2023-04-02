@@ -1,0 +1,90 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model classes {
+  idClasse  Int      @id @default(autoincrement())
+  nomClasse String   @db.VarChar(255)
+  eleves    eleves[]
+}
+
+model cours {
+  idCours     Int         @id @default(autoincrement())
+  idEleve     Int
+  idProf      Int
+  idMatiere   Int
+  idSession   Int
+  eleves      eleves      @relation(fields: [idEleve], references: [idEleve], onDelete: Cascade, map: "cours_ibfk_1")
+  professeurs professeurs @relation(fields: [idProf], references: [idProf], onDelete: Cascade, map: "cours_ibfk_2")
+  matieres    matieres    @relation(fields: [idMatiere], references: [idMatiere], onDelete: Cascade, map: "cours_ibfk_3")
+  sessions    sessions    @relation(fields: [idSession], references: [idSession], onDelete: Cascade, map: "cours_ibfk_4")
+  notes       notes[]
+
+  @@index([idEleve], map: "idEleve")
+  @@index([idMatiere], map: "idMatiere")
+  @@index([idProf], map: "idProf")
+  @@index([idSession], map: "idSession")
+}
+
+model eleves {
+  idEleve     Int      @id @default(autoincrement())
+  identifiant String   @db.VarChar(50)
+  password    String   @db.VarChar(50)
+  nomEleve    String   @db.VarChar(50)
+  prenomEleve String   @db.VarChar(50)
+  genre       String   @db.VarChar(50)
+  dateNaiss   DateTime @db.Date
+  email       String   @db.VarChar(50)
+  tel         String   @db.VarChar(50)
+  idClasse    Int
+  cours       cours[]
+  classes     classes  @relation(fields: [idClasse], references: [idClasse], onDelete: Cascade, map: "eleves_ibfk_1")
+  notes       notes[]
+
+  @@index([idClasse], map: "idClasse")
+}
+
+model matieres {
+  idMatiere   Int     @id @default(autoincrement())
+  descMatiere String  @db.VarChar(255)
+  cours       cours[]
+}
+
+model notes {
+  idNote  Int    @id @default(autoincrement())
+  score   Int
+  idEleve Int
+  idCours Int
+  eleves  eleves @relation(fields: [idEleve], references: [idEleve], onDelete: Cascade, map: "notes_ibfk_1")
+  cours   cours  @relation(fields: [idCours], references: [idCours], onDelete: Cascade, map: "notes_ibfk_2")
+
+  @@index([idCours], map: "idCours")
+  @@index([idEleve], map: "idEleve")
+}
+
+model professeurs {
+  idProf      Int      @id @default(autoincrement())
+  identifiant String   @db.VarChar(50)
+  password    String   @db.VarChar(50)
+  nomProf     String   @db.VarChar(50)
+  prenomProf  String   @db.VarChar(50)
+  genre       String   @db.VarChar(50)
+  dateNaiss   DateTime @db.Date
+  email       String   @db.VarChar(50)
+  tel         String   @db.VarChar(50)
+  salaire     Int
+  cours       cours[]
+}
+
+model sessions {
+  idSession   Int      @id @default(autoincrement())
+  descSession String   @db.VarChar(255)
+  dateDebut   DateTime @db.DateTime(0)
+  dateFin     DateTime @db.DateTime(0)
+  cours       cours[]
+}

@@ -1,0 +1,23 @@
+{
+  "name": "projet",
+  "version": "1.0.0",
+  "description": "projet graphql",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "watch": "nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ziyi WANG",
+  "license": "ISC",
+  "dependencies": {
+    "@apollo/server": "^4.5.0",
+    "@prisma/client": "^4.12.0",
+    "express": "^4.18.2",
+    "express-graphql": "^0.12.0",
+    "graphql": "^16.6.0",
+    "nodemon": "^2.0.22",
+    "prisma": "^4.12.0"
+  }
+}
